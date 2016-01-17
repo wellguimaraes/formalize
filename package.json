@@ -1,0 +1,25 @@
+{
+  "name": "formalize",
+  "version": "1.0.0",
+  "description": "A form-2-object and object-2-form conversion library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wellguimaraes/formalize.git"
+  },
+  "keywords": [
+    "javascript",
+    "form",
+    "object",
+    "conversion"
+  ],
+  "author": "Wellington Guimaraes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wellguimaraes/formalize/issues"
+  },
+  "homepage": "https://github.com/wellguimaraes/formalize#readme"
+}
