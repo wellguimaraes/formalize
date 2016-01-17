@@ -173,4 +173,8 @@ var Formalize = function() {
     return this;
 };
 
-module.exports = new Formalize();
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = new Formalize();
+else
+    window.Formalize = new Formalize();
+
