@@ -52,33 +52,40 @@ var Formalize = function() {
         var obj = {};
 
         for (var f = 0; f < fields.length; f++) {
-            var keys = fields[f].path.split('.');
-            var current = obj;
 
-            for (var k = 0; k < keys.length; k++) {
-                var key = keys[k];
-                var arrayIndex = /\[[0-9]+\]/.test(key)
-                    ? /\[([0-9]+)\]/.exec(key)[1]
+            var pathKeys = fields[f].path.split('.');
+            var curr = obj;
+
+            for (var k = 0; k < pathKeys.length; k++) {
+
+                var pathKey = pathKeys[k].replace(/\[\d+\]/, '');
+                var arrayIndex = /\[\d+\]/.test(pathKeys[k])
+                    ? /\[(\d+)\]/.exec(pathKeys[k])[1]
                     : -1;
-                key = key.replace(/\[[0-9]+\]/, '');
-                if (current[key] === undefined && k < keys.length - 1) {
-                    if (arrayIndex === -1)
-                        current[key] = {};
+
+                var latestPathKey = k === pathKeys.length - 1;
+                var itemIsNotDefined = curr[pathKey] === undefined;
+                var isArrayItem = arrayIndex > -1;
+
+                if (itemIsNotDefined && !latestPathKey) {
+                    if (!isArrayItem)
+                        curr[pathKey] = {};
                     else {
-                        current[key] = [];
-                        current[key][arrayIndex] = {};
+                        curr[pathKey] = [];
+                        curr[pathKey][arrayIndex] = {};
                     }
-                } else if (k === keys.length - 1) {
-                    if (current[key] instanceof Array)
-                        current[key].push(fields[f].value);
+                } else if (latestPathKey) {
+                    if (curr[pathKey] instanceof Array)
+                        curr[pathKey].push(fields[f].value);
                     else
-                        current[key] = fields[f].value;
-                } else if (arrayIndex > -1 && current[key][arrayIndex] === undefined) {
-                    current[key][arrayIndex] = {};
+                        curr[pathKey] = fields[f].value;
+                } else if (isArrayItem && curr[pathKey][arrayIndex] === undefined) {
+                    curr[pathKey][arrayIndex] = {};
                 }
-                current = (current[key] instanceof Array)
-                    ? current[key][arrayIndex]
-                    : current[key];
+
+                curr = (curr[pathKey] instanceof Array)
+                    ? curr[pathKey][arrayIndex]
+                    : curr[pathKey];
             }
         }
 
