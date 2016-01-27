@@ -5,7 +5,7 @@
   "author": "Wellington Guimaraes",
   "main": "index.js",
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha"
+    "test": "mocha ./test"
   },
   "repository": {
     "type": "git",
