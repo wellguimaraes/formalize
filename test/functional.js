@@ -1,7 +1,7 @@
 const Browser = require('zombie');
 const formalize = require('../src/index');
 const http = require('http');
-var assert = require('assert');
+const assert = require('assert');
 
 const host = '127.0.0.1';
 const port = 31234;
