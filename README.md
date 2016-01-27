@@ -28,7 +28,7 @@ var obj = {
 };
 
 // Fill it in
-Formalize.objectToForm(obj, '#my-form')
+Formalize.objectToForm(obj, '#my-form');
 ```
 
 **Formalize** created two hidden fields (for the form missing fields):
@@ -41,5 +41,5 @@ Formalize.objectToForm(obj, '#my-form')
 #### Get and object based on a form
 
 ```js
-Formalize.formToObject('#my-form')
+var obj = Formalize.formToObject('#my-form');
 ```
