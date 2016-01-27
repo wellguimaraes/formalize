@@ -1,45 +1,41 @@
-var Formalize = function() {
+var Formalize = function () {
 
     /**
      * Recursively find fields in an object
      *
-     * @param root object
+     * @param obj object
      * @param parentPath
      * @returns *[] an array of fields { path: string, value: any }
      */
-    var mapObjectFields = function(root, parentPath) {
-        if (root == null)
-            return [];
+    var _mapObjectFields = function (obj, parentPath) {
 
-        var rootIsArray = Object.prototype.toString.call(root) === "[object Array]";
-        var rootIsObject = typeof root === "object";
-        var fields = [];
+        var fields = {};
 
-        if (rootIsArray) {
-            for (var i = 0; i < root.length; i++) {
-                var itemPath = parentPath + "[" + i + "]";
-                fields = fields.concat(mapObjectFields(root[i], itemPath));
+        if (obj == null) return fields;
+
+        var rootIsArray = Object.prototype.toString.call(obj) === "[object Array]";
+        var rootIsObject = typeof obj === "object";
+
+        if (rootIsArray || rootIsObject) {
+            for (var i in obj) {
+                var itemPath = rootIsArray
+                    ? parentPath + "[" + i + "]"
+                    : parentPath != null
+                    ? parentPath + "." + i
+                    : i;
+
+                var subFields = _mapObjectFields(obj[i], itemPath);
+
+                for (var subField in subFields)
+                    fields[subField] = subFields[subField];
             }
 
             return fields;
         }
 
-        if (rootIsObject) {
-            for (var key in root) {
-                var objPath = parentPath != null
-                    ? parentPath + "." + key
-                    : key;
+        fields[parentPath] = obj;
 
-                fields = fields.concat(mapObjectFields(root[key], objPath));
-            }
-
-            return fields;
-        }
-
-        return [{
-            path: parentPath,
-            value: root
-        }];
+        return fields;
     };
 
     /**
@@ -48,7 +44,7 @@ var Formalize = function() {
      * @param fields an array with the fields names
      * @returns {{}}
      */
-    var createObjectFrom = function(fields) {
+    var _createObjectFrom = function (fields) {
         var obj = {};
 
         for (var f = 0; f < fields.length; f++) {
@@ -100,7 +96,7 @@ var Formalize = function() {
      * @param formSelector
      */
     this.objectToForm = function (obj, formSelector) {
-        var fields = mapObjectFields(obj);
+        var fields = _mapObjectFields(obj);
         var formObj = document.querySelector(formSelector);
 
         for (var i = 0; i < fields.length; i++) {
@@ -111,7 +107,7 @@ var Formalize = function() {
 
                 switch (type.toLowerCase()) {
                     case "date":
-                        field.value = new Date(fields[i].value).toLocaleString().substr(0,10);
+                        field.value = new Date(fields[i].value).toLocaleString().substr(0, 10);
                         break;
                     default:
                         field.value = fields[i].value;
@@ -135,19 +131,16 @@ var Formalize = function() {
      * @param includeEmpty
      * @returns {*}
      */
-    this.formToObject = function(formSelector, includeEmpty) {
+    this.formToObject = function (formSelector, includeEmpty) {
+        var form     = document.querySelector(formSelector) || document.forms[0];
+        var elements = form.elements;
+        var fields   = [];
 
-        formSelector = document.querySelector(formSelector) || document.forms[0];
-
-        var formElements = formSelector.elements;
-        var fields = [];
-
-        for (var i = 0; i < formElements.length; i += 1) {
-
-            var element = formElements[i];
-            var type = element.type;
-            var name = element.name;
-            var value = element.value;
+        for (var i in elements) {
+            var element = elements[i];
+            var type    = element.type;
+            var name    = element.name;
+            var value   = element.value;
 
             if (name === '') continue;
 
@@ -159,22 +152,17 @@ var Formalize = function() {
                 case 'select-one':
                 case 'password':
                 case 'hidden':
-                    if (value === '' && includeEmpty !== true)
+                    if (value === '' && !includeEmpty)
                         continue;
 
                     if (element.dataset.type === 'bool')
-                        value = value === 'true';
+                        value = (value === 'true');
 
                     fields.push({path: name, value: value});
-                    break;
-
-                default:
-                    break;
             }
-
         }
 
-        return createObjectFrom(fields);
+        return _createObjectFrom(fields);
     };
 
     return this;
