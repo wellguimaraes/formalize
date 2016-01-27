@@ -1,10 +1,11 @@
 {
   "name": "formalize",
-  "version": "1.0.0",
   "description": "A form-2-object and object-2-form conversion library",
+  "version": "1.0.0",
+  "author": "Wellington Guimaraes",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./node_modules/mocha/bin/mocha"
   },
   "repository": {
     "type": "git",
@@ -16,10 +17,13 @@
     "object",
     "conversion"
   ],
-  "author": "Wellington Guimaraes",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/wellguimaraes/formalize/issues"
   },
-  "homepage": "https://github.com/wellguimaraes/formalize#readme"
+  "homepage": "https://github.com/wellguimaraes/formalize#readme",
+  "devDependencies": {
+    "mocha": "^2.4.3",
+    "zombie": "^4.2.1"
+  }
 }
