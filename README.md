@@ -31,7 +31,7 @@ var obj = {
 Formalize.objectToForm(obj, '#my-form')
 ```
 
-Observe that __Formalize__ created two hidden fields (for the form missing fields):
+**Formalize** created two hidden fields (for the form missing fields):
 
 ```html
 <input type="text" name="customer.pets[1].name">
