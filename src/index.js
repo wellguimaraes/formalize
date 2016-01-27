@@ -99,25 +99,14 @@ var Formalize = function () {
         for (var fieldPath in fields) {
             var field = formObj.querySelector("[name='" + fieldPath + "']");
 
-            if (field != null) {
-                var type = "text";
-
-                switch (type.toLowerCase()) {
-                    case "date":
-                        field.value = new Date(fields[fieldPath]).toLocaleString().substr(0, 10);
-                        break;
-                    default:
-                        field.value = fields[fieldPath];
-                }
-            } else {
-                var hidden = document.createElement("input");
-
-                hidden.type = "hidden";
-                hidden.name = fieldPath;
-                hidden.value = fields[fieldPath];
-
-                formObj.appendChild(hidden);
+            if (field == null) {
+                field = document.createElement("input");
+                field.type = "hidden";
+                field.name = fieldPath;
+                formObj.appendChild(field);
             }
+
+            field.value = fields[fieldPath];
         }
     };
 
