@@ -1,5 +1,5 @@
 # Formalize.js
-A form-2-object and object-2-form conversion library.
+A form-to-object and object-to-form conversion library.
 
 #### Fill in a form with an object
 
