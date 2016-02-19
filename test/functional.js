@@ -20,6 +20,7 @@ describe('formalize', function () {
                         <input type="text" name="a.b[1]" />
                         <input type="text" name="b.c" />
                         <input type="text" name="b.d[0].x" />
+                        <input type="text" name="b.d[0].y" />
                         <input type="text" name="b.d[1].x" />
                     </form>
                 </body>`);
@@ -40,7 +41,7 @@ describe('formalize', function () {
 
         var expected = {
             a: 'lorem',
-            b: { c: 'ipsum' }
+            b: {c: 'ipsum'}
         };
 
         assert.deepEqual(expected, formalize.formToObject('form'));
@@ -50,13 +51,14 @@ describe('formalize', function () {
         browser.fill('a.b[0]', 'lorem');
         browser.fill('a.b[1]', 'ipsum');
         browser.fill('b.d[0].x', 'dolor');
+        browser.fill('b.d[0].y', 'xpto');
         browser.fill('b.d[1].x', 'sit');
 
         var expected = {
             a: {b: ['lorem', 'ipsum']},
             b: {
                 d: [
-                    {x: 'dolor'},
+                    {x: 'dolor', y: 'xpto'},
                     {x: 'sit'}
                 ]
             }

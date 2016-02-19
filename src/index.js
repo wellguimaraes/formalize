@@ -75,7 +75,11 @@ var Formalize = function () {
                     else
                         curr[pathItem] = fields[f].value;
                 } else if (curr[pathItem] instanceof Array) {
-                    curr[pathItem].push(curr = {});
+                    if (curr[pathItem][arrayIndex])
+                        curr = curr[pathItem][arrayIndex];
+                    else
+                        curr[pathItem].push(curr = {});
+
                     continue;
                 }
 
