@@ -16,9 +16,11 @@ describe('formalize', function () {
                 <body>
                     <form>
                         <input type="text" name="a" />
+                        <input type="text" name="a.b[0]" />
+                        <input type="text" name="a.b[1]" />
                         <input type="text" name="b.c" />
-                        <input type="text" name="b.d[0]" />
-                        <input type="text" name="b.d[1]" />
+                        <input type="text" name="b.d[0].x" />
+                        <input type="text" name="b.d[1].x" />
                     </form>
                 </body>`);
             })
@@ -32,17 +34,31 @@ describe('formalize', function () {
         });
     });
 
-    it('should convert filled form to object', function () {
+    it('should convert filled form to basic object', function () {
         browser.fill('a', 'lorem');
         browser.fill('b.c', 'ipsum');
-        browser.fill('b.d[0]', 'dolor');
-        browser.fill('b.d[1]', 'sit');
 
         var expected = {
             a: 'lorem',
+            b: { c: 'ipsum' }
+        };
+
+        assert.deepEqual(expected, formalize.formToObject('form'));
+    });
+
+    it('should convert filled form to object with arrays', function () {
+        browser.fill('a.b[0]', 'lorem');
+        browser.fill('a.b[1]', 'ipsum');
+        browser.fill('b.d[0].x', 'dolor');
+        browser.fill('b.d[1].x', 'sit');
+
+        var expected = {
+            a: {b: ['lorem', 'ipsum']},
             b: {
-                c: 'ipsum',
-                d: ['dolor', 'sit']
+                d: [
+                    {x: 'dolor'},
+                    {x: 'sit'}
+                ]
             }
         };
 
@@ -67,7 +83,7 @@ describe('formalize', function () {
     });
 
     it('should create a hidden field when the object field does not exist in the form', function () {
-        var obj = { z: 'lorem'};
+        var obj = {z: 'lorem'};
         formalize.objectToForm(obj, 'form');
 
         assert.equal('lorem', document.querySelector('[name=z]').value);
